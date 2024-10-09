@@ -1,23 +1,64 @@
 package ylab.com;
 
-import java.time.LocalDate;
+
 import java.util.List;
 
 public class HabitManager {
-    public void createHabit(User user, String title, String description, String frequency) {
-        // Логика создания привычки
+    private final HabitTrackingService habitTrackingService = new HabitTrackingService();
+
+    public Habit createHabit(User user, String title, String description, Frequency frequency) {
+        Habit habit = new Habit(title, description, frequency);
+        user.getHabits().add(habit);
+        System.out.println("Привычка добавлена.");
+
+        return habit;
     }
+
+
+    public void editHabit(Habit habit, String newTitle, String newDescription, Frequency newFrequency) {
+        habit.setTitle(newTitle);
+        habit.setDescription(newDescription);
+        habit.setFrequency(newFrequency);
+        System.out.println("Привычка изменена.");
+    }
+
 
     public void deleteHabit(User user, Habit habit) {
-        // Логика удаления привычки
+        user.getHabits().remove(habit);
+        System.out.println("Привычка удалена.");
     }
 
-    public void markHabitAsCompleted(User user, Habit habit, LocalDate date) {
-        // Логика отметки выполнения привычки
+
+    public void viewHabits(User user) {
+        if (user.getHabits().isEmpty()) {
+            System.out.println("У вас нет привычек.");
+        } else {
+            for (Habit habit : user.getHabits()) {
+                System.out.println("Привычка: " + habit.getTitle() + ", Описание: " + habit.getDescription());
+            }
+        }
     }
 
-    public List<Habit> getHabits(User user) {
-        // Логика получения списка привычек
-        return List.of();
+    public void trackHabit(User user, String habitName) {
+        List<Habit> userHabits = user.getHabits();
+        for (Habit habit : userHabits) {
+            if (habit.getTitle().equalsIgnoreCase(habitName)) {
+                habitTrackingService.markHabitCompleted(habit);
+                System.out.println("Привычка '" + habitName + "' отмечена как выполненная.");
+                return;
+            }
+        }
+        System.out.println("Привычка '" + habitName + "' не найдена.");
+    }
+    public void showHabitStatistics(User user, String habitName){
+        List<Habit> userHabits = user.getHabits();
+        for (Habit habit : userHabits) {
+            if (habit.getTitle().equalsIgnoreCase(habitName)) {
+                habitTrackingService.showHabitStatistics(habit);
+                System.out.println("Привычка '" + habitName + "' отмечена как выполненная.");
+                return;
+            }
+        }
+        System.out.println("Привычка '" + habitName + "' не найдена.");
     }
 }
