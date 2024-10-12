@@ -1,4 +1,4 @@
-package ylab.com;
+package ylab.com.utils;
 
 public enum Frequency {
     DAILY("ежедневно"),
@@ -19,7 +19,7 @@ public enum Frequency {
             if (frequency.getDescription().equalsIgnoreCase(input)) {
                 return frequency;
             }
-        }//todo: need handle
+        }
         throw new IllegalArgumentException("Неправильный формат частоты. Допустимые значения: ежедневно, еженедельно.");
     }
 }

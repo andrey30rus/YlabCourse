@@ -1,13 +1,20 @@
-package ylab.com;
+package ylab.com.dao;
+
+import ylab.com.models.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class UserManager {
-    private Map<String, User> users = new HashMap<>();
+    private static Map<String, User> users = new HashMap<>();
 
-    // Регистрация пользователя
+    static {
+        User admin = new User("admin", "admin@gmail.com", "admin");
+        admin.setAdmin();
+        users.put(admin.getEmail(), admin);
+    }
+
     public void registerUser(String name, String email, String password) {
         if (users.containsKey(email)) {
             System.out.println("Пользователь с таким email уже существует.");
@@ -18,9 +25,12 @@ public class UserManager {
         System.out.println("Пользователь зарегистрирован.");
     }
 
-    // Авторизация
     public User loginUser(String email, String password) {
         User user = users.get(email);
+        if (user != null && user.isBlocked()) {
+            System.out.println("Ваш аккаунт был заблокирован администратором");
+            return null;
+        }
         if (user != null && user.getPassword().equals(password)) {
             System.out.println("Добро пожаловать, " + user.getName() + "!");
             return user;
@@ -30,16 +40,15 @@ public class UserManager {
         }
     }
 
-    // Изменение профиля
     public void updateUserProfile(User user, String newName, String newEmail, String newPassword) {
+        users.remove(user.getEmail(), user);
         user.setName(newName);
         user.setEmail(newEmail);
         user.setPassword(newPassword);
-        users.put(newEmail, user); // Обновляем email в коллекции
+        users.put(newEmail, user);
         System.out.println("Профиль обновлен.");
     }
 
-    // Удаление аккаунта
     public void deleteUser(String email) {
         users.remove(email);
         System.out.println("Аккаунт удален.");
@@ -48,6 +57,22 @@ public class UserManager {
     public User getUserByEmail(String email) {
         User user = users.get(email);
         return user;
+    }
+
+
+    public void blockUser(String email) {
+        User user = users.get(email);
+        if (user != null) {
+            user.setBlocked(true);
+            System.out.println("Пользователь заблокирован.");
+        } else {
+            System.out.println("Пользователь не найден.");
+        }
+    }
+
+
+    public Map<String, User> getAllUsers() {
+        return users;
     }
 }
 

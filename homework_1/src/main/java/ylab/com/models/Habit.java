@@ -1,13 +1,16 @@
-package ylab.com;
+package ylab.com.models;
+
+import ylab.com.utils.Frequency;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Habit {
     private String title;
     private String description;
-    private Frequency frequency; // "ежедневно", "еженедельно"
+    private Frequency frequency;
     private boolean completed;
     private List<LocalDate> completionDates;
 
@@ -19,12 +22,12 @@ public class Habit {
         this.completed = false;
     }
 
-    // Метод для отметки привычки как выполненной
+
     public void markAsCompleted() {
         this.completed = true;
     }
 
-    // Метод для проверки, была ли привычка выполнена
+
     public boolean isCompleted() {
         return completed;
     }
@@ -70,6 +73,19 @@ public class Habit {
                 ", frequency='" + frequency + '\'' +
                 ", completionDates=" + completionDates +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Habit habit = (Habit) o;
+        return completed == habit.completed && Objects.equals(title, habit.title) && Objects.equals(description, habit.description) && frequency == habit.frequency && Objects.equals(completionDates, habit.completionDates);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, description, frequency, completed, completionDates);
     }
 }
 

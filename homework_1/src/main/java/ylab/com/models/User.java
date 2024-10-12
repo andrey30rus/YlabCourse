@@ -1,4 +1,4 @@
-package ylab.com;
+package ylab.com.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ public class User {
     private String email;
     private String password;
     private boolean isAdmin;
+    private boolean isBlocked;
     private List<Habit> habits;
 
     public User(String name, String email, String password) {
@@ -15,9 +16,16 @@ public class User {
         this.email = email;
         this.password = password;
         this.isAdmin = false;
+        this.isBlocked = false;
         this.habits = new ArrayList<>();
     }
+    public boolean isBlocked() {
+        return isBlocked;
+    }
 
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
     public String getName() {
         return name;
     }
@@ -46,8 +54,8 @@ public class User {
         return isAdmin;
     }
 
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
+    public void setAdmin() {
+        this.isAdmin = true;
     }
 
     public List<Habit> getHabits() {

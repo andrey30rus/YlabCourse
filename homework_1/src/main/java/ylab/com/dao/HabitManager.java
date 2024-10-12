@@ -1,10 +1,16 @@
-package ylab.com;
+package ylab.com.dao;
 
+
+import ylab.com.models.Habit;
+import ylab.com.models.User;
+import ylab.com.service.StatisticsService;
+import ylab.com.utils.Frequency;
 
 import java.util.List;
 
 public class HabitManager {
-    private final HabitTrackingService habitTrackingService = new HabitTrackingService();
+    private final StatisticsService statisticsService = new StatisticsService();
+
 
     public Habit createHabit(User user, String title, String description, Frequency frequency) {
         Habit habit = new Habit(title, description, frequency);
@@ -25,7 +31,7 @@ public class HabitManager {
 
     public void deleteHabit(User user, Habit habit) {
         user.getHabits().remove(habit);
-        System.out.println("Привычка удалена.");
+        System.out.println("Привычка успешно удалена.");
     }
 
 
@@ -43,19 +49,41 @@ public class HabitManager {
         List<Habit> userHabits = user.getHabits();
         for (Habit habit : userHabits) {
             if (habit.getTitle().equalsIgnoreCase(habitName)) {
-                habitTrackingService.markHabitCompleted(habit);
+                statisticsService.markHabitCompleted(habit);
                 System.out.println("Привычка '" + habitName + "' отмечена как выполненная.");
                 return;
             }
         }
         System.out.println("Привычка '" + habitName + "' не найдена.");
     }
-    public void showHabitStatistics(User user, String habitName){
+
+    public void showHabitStatistics(User user, String habitName) {
         List<Habit> userHabits = user.getHabits();
         for (Habit habit : userHabits) {
             if (habit.getTitle().equalsIgnoreCase(habitName)) {
-                habitTrackingService.showHabitStatistics(habit);
-                System.out.println("Привычка '" + habitName + "' отмечена как выполненная.");
+                statisticsService.generateProgressReport(habit);
+                return;
+            }
+        }
+        System.out.println("Привычка '" + habitName + "' не найдена.");
+    }
+
+    public void calculateCurrentStreak(User user, String habitName) {
+        List<Habit> userHabits = user.getHabits();
+        for (Habit habit : userHabits) {
+            if (habit.getTitle().equalsIgnoreCase(habitName)) {
+                statisticsService.calculateCurrentStreak(habit);
+                return;
+            }
+        }
+        System.out.println("Привычка '" + habitName + "' не найдена.");
+    }
+
+    public void calculateSuccessRate(User user, String habitName, int days) {
+        List<Habit> userHabits = user.getHabits();
+        for (Habit habit : userHabits) {
+            if (habit.getTitle().equalsIgnoreCase(habitName)) {
+                statisticsService.calculateSuccessRate(habit, days);
                 return;
             }
         }
